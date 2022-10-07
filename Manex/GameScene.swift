@@ -10,8 +10,12 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    var tileGroup: SKTileGroup?
     var tileMap: SKTileMapNode?
     var addButton: SKLabelNode?
+    var removeButton: SKLabelNode?
+
+    
     override var isUserInteractionEnabled: Bool {
         get {
             return true
@@ -31,29 +35,27 @@ class GameScene: SKScene {
         let tileSet = SKTileSet(tileGroups: [shipGroup], tileSetType: .grid)
         let tileSize = tileSet.defaultTileSize
         tileMap = SKTileMapNode(tileSet: tileSet, columns: 8, rows: 8, tileSize: tileSize)
-        let tileGroup =  tileSet.tileGroups.first
-//        tileMap.fill(with: tileGroup)
+        self.tileGroup = tileSet.tileGroups.first
+        
         tileMap!.setTileGroup(tileGroup, forColumn: 1, row: 7)
         
-        self.addChild(tileMap!)
+        addChild(tileMap!)
         
-        addButton = self.childNode(withName: "addButton") as? SKLabelNode
+        // Add button
+        addButton = SKLabelNode(text: "Add Ship")
+        addButton!.name = "addButton"
         addButton!.fontSize = CGFloat(36)
         addButton!.fontColor = .black
+        addButton!.position = CGPoint(x: -size.width * 0.25, y: -size.height * 0.4)
+        addChild(addButton!)
         
-        
-//        let rect = SKShapeNode(rect: CGRect(x: size.width/2, y: size.height/2, width: 200, height: 200 ))
-//        rect.fillColor = .blue
-//        rect.lineWidth = 2
-//        rect.strokeColor = .red
-//        rect.glowWidth = 0.5
-//        addChild(rect)
-        
-//        let radius = CGFloat(Float(100))
-//        let circle = SKShapeNode(circleOfRadius: radius)
-//        circle.position = CGPoint(x: 0, y: 0)
-//        circle.fillColor = .brown
-//        addChild(circle)
+        // Remove button
+        removeButton = SKLabelNode(text: "Remove Ship")
+        removeButton!.name = "removeButton"
+        removeButton!.fontSize = CGFloat(36)
+        removeButton!.fontColor = .black
+        removeButton!.position = CGPoint(x: size.width * 0.25, y: -size.height * 0.4)
+        addChild(removeButton!)
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -61,8 +63,17 @@ class GameScene: SKScene {
             return
         }
         let location = touch.location(in: self)
-        let touchedNodes = nodes(at: location)
+//        let touchedNodes = nodes(at: location)
         let frontTouchedNode = atPoint(location).name
+                
+        switch frontTouchedNode {
+            case addButton!.name:
+                tileMap!.setTileGroup(tileGroup, forColumn: 1, row: 7)
+            case removeButton!.name:
+                tileMap!.setTileGroup(nil, forColumn: 1, row: 7)
+            default:
+                break
+        }
     }
     
     
