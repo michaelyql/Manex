@@ -10,6 +10,17 @@ import GameplayKit
 
 class GameScene: SKScene {
     
+    var tileMap: SKTileMapNode?
+    var addButton: SKLabelNode?
+    override var isUserInteractionEnabled: Bool {
+        get {
+            return true
+        }
+        set {
+            // ignore
+        }
+    }
+    
     override func didMove(to view: SKView) {
     
         backgroundColor = .white
@@ -19,17 +30,17 @@ class GameScene: SKScene {
         let shipGroup = SKTileGroup(tileDefinition: ship)
         let tileSet = SKTileSet(tileGroups: [shipGroup], tileSetType: .grid)
         let tileSize = tileSet.defaultTileSize
-        let tileMap = SKTileMapNode(tileSet: tileSet, columns: 8, rows: 8, tileSize: tileSize)
+        tileMap = SKTileMapNode(tileSet: tileSet, columns: 8, rows: 8, tileSize: tileSize)
         let tileGroup =  tileSet.tileGroups.first
-        tileMap.fill(with: tileGroup)
-        self.addChild(tileMap)
+//        tileMap.fill(with: tileGroup)
+        tileMap!.setTileGroup(tileGroup, forColumn: 1, row: 7)
         
-//        let centre = CGPoint(x: size.width/2, y: size.height/2)
-//        let ship = SKSpriteNode(imageNamed: "ship")
-//        ship.position = centre
-//        ship.xScale = 4
-//        ship.yScale = 4
-//        addChild(ship)
+        self.addChild(tileMap!)
+        
+        addButton = self.childNode(withName: "addButton") as? SKLabelNode
+        addButton!.fontSize = CGFloat(36)
+        addButton!.fontColor = .black
+        
         
 //        let rect = SKShapeNode(rect: CGRect(x: size.width/2, y: size.height/2, width: 200, height: 200 ))
 //        rect.fillColor = .blue
@@ -45,7 +56,18 @@ class GameScene: SKScene {
 //        addChild(circle)
     }
     
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else {
+            return
+        }
+        let location = touch.location(in: self)
+        let touchedNodes = nodes(at: location)
+        let frontTouchedNode = atPoint(location).name
+    }
+    
+    
     override func update(_ currentTime: TimeInterval) {
         // Called before each frame is rendered
+        
     }
 }
