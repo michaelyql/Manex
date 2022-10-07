@@ -16,12 +16,13 @@ class MyScene: SKScene {
     // so you should override this method for every scene 
     override func didMove(to view: SKView) {
         
-        self.square = SKShapeNode(rect: CGRect(origin: CGPoint(x: 0, y: 0), size: CGSize(width: 1, height: 1)))
+        self.square = self.childNode(withName: "//SKShapeNode") as? SKShapeNode
         
         if let square = self.square {
-            backgroundColor = SKColor.blue
-            addChild(square)
+            square.alpha = 0.0
+            square.run(SKAction.repeatForever(SKAction.rotate(byAngle: CGFloat(Double.pi), duration: 1)))
         }
+        
     }
 }
 
