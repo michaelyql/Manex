@@ -20,6 +20,10 @@ class GameViewController: UIViewController {
             if let scene = GameScene(fileNamed: "GameScene") {
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .resizeFill
+                let cameraNode = SKCameraNode()
+//                cameraNode.position = CGPoint(x: scene.size.width/2, y: scene.size.height/2)
+                scene.camera = cameraNode
+                scene.addChild(cameraNode)
                 
                 // Present the scene
                 view.presentScene(scene)
