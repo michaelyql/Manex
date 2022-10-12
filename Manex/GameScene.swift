@@ -11,7 +11,7 @@ import GameplayKit
 class GameScene: SKScene {
     
     var previousCameraPoint = CGPoint.zero
-    let baseShip = SKSpriteNode(imageNamed: "ship")
+    var baseShip = SKSpriteNode(imageNamed: "warship_large_v2")
 
     override var isUserInteractionEnabled: Bool {
         get {
@@ -42,16 +42,17 @@ class GameScene: SKScene {
         // Called before each frame is rendered
     }
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//       addShip()
-//    }
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+       addShip()
+    }
     
     // Function to add ship
-//    func addShip() {
-//        let newShip = SKSpriteNode(imageNamed: "ship")
-//        newShip.position = CGPoint(x: baseShip.position.x, y: baseShip.position.y - 50)
-//        camera?.addChild(newShip)
-//    }
+    func addShip() {
+        let newShip = SKSpriteNode(imageNamed: "warship_large_v2")
+        newShip.position = CGPoint(x: baseShip.position.x, y: baseShip.position.y - 200)
+        camera?.addChild(newShip)
+        baseShip = newShip
+    }
     
     // Camera movement
     @objc func panGestureAction(_ sender: UIPanGestureRecognizer) {

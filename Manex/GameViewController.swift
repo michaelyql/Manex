@@ -12,8 +12,8 @@ import GameplayKit
 class GameViewController: UIViewController {
 
     // Perform a one-time instantiation and initialization of the VC's view's contents
-    override func viewDidLoad() { // the default implementation does nothing
-        super.viewDidLoad() // call to super in case a superclass also overrides this method
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
