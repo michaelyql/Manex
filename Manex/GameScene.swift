@@ -12,9 +12,11 @@ class GameScene: SKScene {
     
     // To implement:
     // Show ship ID number next to / on top of ship
-    // Add toggle button for 
+    // Add toggle button for showing / hiding ship ID number
     // func addShipToRow() {}
     // Button for addShip() function
+    // Function and button for removing ship
+    // Standard ship formations (column and line abreast)
     
     var previousCameraPoint = CGPoint.zero
     var baseShip = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150, id: 1)
@@ -30,9 +32,14 @@ class GameScene: SKScene {
         
         backgroundColor = .white
         
-        // Adding gesture recognizer for panning
+        // Gesture recognizer for panning
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureAction(_:)))
         view.addGestureRecognizer(panGesture)
+        
+        // Gesture recognizer for pinching
+        let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(pinchGestureAction(_:)))
+        view.addGestureRecognizer(pinchGesture)
+        
         self.addChild(baseShip)
         baseShip.position = CGPoint(x: frame.midX, y: frame.midY)
         
@@ -45,7 +52,7 @@ class GameScene: SKScene {
     
     // Overriding methods to allow the Scene and its nodes to respond to touch events
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        addShipToColummn()
+//        addShipToColummn()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -80,5 +87,13 @@ class GameScene: SKScene {
         let translation = sender.translation(in: self.view)
         let newPosition = CGPoint(x: previousCameraPoint.x + translation.x * -1, y: previousCameraPoint.y + translation.y)
         camera.position = newPosition
+    }
+    
+    @IBAction func pinchGestureAction(_ sender: UIPinchGestureRecognizer) {
+        guard let camera = self.camera else { return }
+        if sender.state == .began || sender.state == .changed {
+            camera.xScale = sender.scale
+            camera.yScale = sender.scale
+        }
     }
 }
