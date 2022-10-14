@@ -9,15 +9,26 @@ import Foundation
 import SpriteKit
 
 class Ship: SKSpriteNode {
-    var tacticalDiameter: CGFloat?
-    var manoeuvringInterval: CGFloat?
     
-    init(texture: SKTexture) {
-        super.init(texture: texture, color: UIColor.clear, size: CGSize(width: 32.0, height: 32.0))
+    // To implement:
+    // LinkedList data structure
+    // Checks to calculate which tactical diameter is greater between two ships
+    // Enum for 3 types of ships
+    
+    var standardDistance: Int = 0
+    var manoeuvringInterval: Int = 0
+    var id: Int = 0
+    var isDivGuide: Bool = false
+    
+    init(imageNamed: String, sd: Int, mi: Int, id: Int) {
+        let texture = SKTexture(imageNamed: "warship_large_v2")
+        super.init(texture: texture, color: UIColor.clear, size: texture.size())
+        self.standardDistance = sd
+        self.manoeuvringInterval = mi
+        self.id = id
     }
     
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        tacticalDiameter = CGFloat(bitPattern: 100)
+        fatalError("init(coder:) has not been implemented")
     }
 }
