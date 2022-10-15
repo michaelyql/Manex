@@ -10,7 +10,11 @@ import SpriteKit
 import GameplayKit
 
 class GameViewController: UIViewController {
-
+    
+    @IBOutlet weak var addShipButton: UIButton!
+    @IBOutlet weak var removeShipButton: UIButton!
+    var scene: GameScene? = nil
+    
     // Perform a one-time instantiation and initialization of the VC's view's contents
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,6 +22,7 @@ class GameViewController: UIViewController {
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
             if let scene = GameScene(fileNamed: "GameScene") {
+                self.scene = scene
                 // Set the scale mode to scale to fit the window
                 scene.scaleMode = .resizeFill
                 
@@ -35,7 +40,15 @@ class GameViewController: UIViewController {
             view.showsNodeCount = true
         }
     }
-
+    
+    @IBAction func addShip(_ sender: UIButton) {
+        scene?.addShipToColummn()
+    }
+    
+    @IBAction func removeShip(_ sender: UIButton) {
+        scene?.removeShipFromColumn()
+    }
+    
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         if UIDevice.current.userInterfaceIdiom == .phone {
             return .allButUpsideDown
