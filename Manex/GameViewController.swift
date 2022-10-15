@@ -31,7 +31,6 @@ class GameViewController: UIViewController {
             }
             view.isUserInteractionEnabled = true
             view.ignoresSiblingOrder = false
-            
             view.showsFPS = true
             view.showsNodeCount = true
         }

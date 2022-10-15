@@ -16,10 +16,11 @@ class GameScene: SKScene {
     // func addShipToRow() {}
     // Button for addShip() function
     // Function and button for removing ship
-    // Standard ship formations (column and line abreast)
+    // Standard ship formations (column and line abreast) - Recursive function
     
     var previousCameraPoint = CGPoint.zero
     var baseShip = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150, id: 1)
+    var addButton = SKLabelNode(text: "Add Ship")
     
     override var isUserInteractionEnabled: Bool {
         get {
@@ -43,6 +44,13 @@ class GameScene: SKScene {
         self.addChild(baseShip)
         baseShip.position = CGPoint(x: frame.midX, y: frame.midY)
         
+        guard let camera = self.camera else { return }
+        camera.addChild(addButton)
+        addButton.fontColor = .black
+        addButton.name = "addButton"
+        addButton.zPosition = 2
+        addButton.position = CGPoint(x: frame.minX + 50, y: frame.minY + 50)
+        
     
     }
     
@@ -52,7 +60,12 @@ class GameScene: SKScene {
     
     // Overriding methods to allow the Scene and its nodes to respond to touch events
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        addShipToColummn()
+        guard let touch = touches.first else { return }
+        let location = touch.location(in: self)
+        let frontTouchedNode = atPoint(location)
+        if frontTouchedNode.name == "addButton" {
+            addShipToColummn()
+        }
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -92,8 +105,8 @@ class GameScene: SKScene {
     @IBAction func pinchGestureAction(_ sender: UIPinchGestureRecognizer) {
         guard let camera = self.camera else { return }
         if sender.state == .began || sender.state == .changed {
-            camera.xScale = sender.scale
-            camera.yScale = sender.scale
+            camera.xScale = 1 / sender.scale
+            camera.yScale = 1 / sender.scale
         }
     }
 }
