@@ -11,16 +11,16 @@ import GameplayKit
 class GameScene: SKScene {
     
     // To implement:
-    // Show ship ID number next to / on top of ship
+    // Static Menu Node fixed to the camera with all the functions
+    // Display ship ID number next to ship -- This can be a nested class
     // Add toggle button for showing / hiding ship ID number
     // func addShipToRow() {}
-    // Button for addShip() function
-    // Function and button for removing ship
     // Standard ship formations (column and line abreast) - Recursive function
     
     var previousCameraPoint = CGPoint.zero
-    var baseShip = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150, id: 1)
+    var lastShip: Ship = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150)
     var addButton = SKLabelNode(text: "Add Ship")
+    var removeButton = SKLabelNode(text: "Remove Ship")
     
     override var isUserInteractionEnabled: Bool {
         get {
@@ -41,16 +41,21 @@ class GameScene: SKScene {
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(pinchGestureAction(_:)))
         view.addGestureRecognizer(pinchGesture)
         
-        self.addChild(baseShip)
-        baseShip.position = CGPoint(x: frame.midX, y: frame.midY)
+        self.addChild(lastShip)
+        lastShip.position = CGPoint(x: frame.midX, y: frame.midY)
         
         guard let camera = self.camera else { return }
         camera.addChild(addButton)
         addButton.fontColor = .black
         addButton.name = "addButton"
         addButton.zPosition = 2
-        addButton.position = CGPoint(x: frame.minX + 50, y: frame.minY + 50)
+        addButton.position = CGPoint(x: frame.minX + 60, y: frame.minY + 50)
         
+        camera.addChild(removeButton)
+        removeButton.fontColor = .black
+        removeButton.name = "removeButton"
+        removeButton.zPosition = 2
+        removeButton.position = CGPoint(x: frame.maxX - 100, y: frame.minY + 50)
     
     }
     
@@ -66,24 +71,29 @@ class GameScene: SKScene {
         if frontTouchedNode.name == "addButton" {
             addShipToColummn()
         }
+        if frontTouchedNode.name == "removeButton" {
+            removeShipFromColumn()
+        }
     }
     
-    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
-    
-    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        
-    }
-    
-    // Function to add ship
     func addShipToColummn() {
-        let newShip = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150, id: 0)
-        newShip.position = CGPoint(x: baseShip.position.x, y: baseShip.position.y - CGFloat(baseShip.standardDistance))
-        newShip.id = baseShip.id + 1
+        let newShip = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150, prev: lastShip)
+        lastShip.nextShip = newShip
+
+        newShip.position = CGPoint(x: lastShip.position.x, y: lastShip.position.y - CGFloat(lastShip.standardDistance))
+        
         guard newShip.id <= 8 else { return }
         addChild(newShip)
-        baseShip = newShip
+        lastShip = newShip
+    }
+    
+    func removeShipFromColumn() {
+        guard lastShip.id > 1 else { return }
+        lastShip.removeFromParent()
+        if let previousShip = lastShip.previousShip {
+            previousShip.nextShip = nil
+            lastShip = previousShip
+        }
     }
     
     // Panning gesture
@@ -102,6 +112,7 @@ class GameScene: SKScene {
         camera.position = newPosition
     }
     
+    /* Camera is still buggy as sender.scale is deleted from memory and reset to value of 1 every time the function is called */
     @IBAction func pinchGestureAction(_ sender: UIPinchGestureRecognizer) {
         guard let camera = self.camera else { return }
         if sender.state == .began || sender.state == .changed {
