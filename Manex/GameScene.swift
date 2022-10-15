@@ -16,11 +16,10 @@ class GameScene: SKScene {
     // Add toggle button for showing / hiding ship ID number
     // func addShipToRow() {}
     // Standard ship formations (column and line abreast) - Recursive function
+    // Toggle to calculate and display the distance between each ship (SD and MI)
     
     var previousCameraPoint = CGPoint.zero
     var lastShip: Ship = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150)
-    var addButton = SKLabelNode(text: "Add Ship")
-    var removeButton = SKLabelNode(text: "Remove Ship")
     
     override var isUserInteractionEnabled: Bool {
         get {
@@ -43,20 +42,6 @@ class GameScene: SKScene {
         
         self.addChild(lastShip)
         lastShip.position = CGPoint(x: frame.midX, y: frame.midY)
-        
-        guard let camera = self.camera else { return }
-        camera.addChild(addButton)
-        addButton.fontColor = .black
-        addButton.name = "addButton"
-        addButton.zPosition = 2
-        addButton.position = CGPoint(x: frame.minX + 60, y: frame.minY + 50)
-        
-        camera.addChild(removeButton)
-        removeButton.fontColor = .black
-        removeButton.name = "removeButton"
-        removeButton.zPosition = 2
-        removeButton.position = CGPoint(x: frame.maxX - 100, y: frame.minY + 50)
-    
     }
     
     override func update(_ currentTime: TimeInterval) {
@@ -64,16 +49,11 @@ class GameScene: SKScene {
     }
     
     // Overriding methods to allow the Scene and its nodes to respond to touch events
+    /* Update 15/10/2022: Buttons now configured as UIButtons in the view, instead of SKNodes in the SKScene */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         let location = touch.location(in: self)
         let frontTouchedNode = atPoint(location)
-        if frontTouchedNode.name == "addButton" {
-            addShipToColummn()
-        }
-        if frontTouchedNode.name == "removeButton" {
-            removeShipFromColumn()
-        }
     }
     
     func addShipToColummn() {
@@ -96,8 +76,15 @@ class GameScene: SKScene {
         }
     }
     
+    func formation1() {
+        addShipToColummn()
+        if lastShip.id < 8 {
+            formation1()
+        } else { return }
+    }
+    
     // Panning gesture
-    @IBAction func panGestureAction(_ sender: UIPanGestureRecognizer) {
+    @objc func panGestureAction(_ sender: UIPanGestureRecognizer) {
         // The camera has a weak reference, so test it
         guard let camera = self.camera else { return }
         
@@ -113,7 +100,7 @@ class GameScene: SKScene {
     }
     
     /* Camera is still buggy as sender.scale is deleted from memory and reset to value of 1 every time the function is called */
-    @IBAction func pinchGestureAction(_ sender: UIPinchGestureRecognizer) {
+    @objc func pinchGestureAction(_ sender: UIPinchGestureRecognizer) {
         guard let camera = self.camera else { return }
         if sender.state == .began || sender.state == .changed {
             camera.xScale = 1 / sender.scale
