@@ -9,9 +9,10 @@ import UIKit
 import SpriteKit
 import SideMenu
 
-class GameViewController: UIViewController {
+class GameViewController: UIViewController, MenuControllerDelegate {
     
-    private var sideMenu = SideMenuNavigationController(rootViewController: MenuViewController(with: ["Formations", "Manex Board", "Feedback"]))
+    private var sideMenu: SideMenuNavigationController?
+    private let boardController = BoardViewController()
     @IBOutlet weak var addShipButton: UIButton!
     @IBOutlet weak var removeShipButton: UIButton!
     var scene: GameScene? = nil
@@ -19,9 +20,13 @@ class GameViewController: UIViewController {
     // Perform a one-time instantiation and initialization of the VC's view's contents
     override func viewDidLoad() {
         super.viewDidLoad()
-        sideMenu.leftSide = true
+        let menu = MenuViewController(with: SideMenuItem.allCases)
+        menu.delegate = self
+        sideMenu = SideMenuNavigationController(rootViewController: menu)
+        sideMenu?.leftSide = true
         SideMenuManager.default.leftMenuNavigationController = sideMenu
         SideMenuManager.default.addPanGestureToPresent(toView: view)
+        addChildControllers()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -45,8 +50,16 @@ class GameViewController: UIViewController {
         }
     }
     
+    private func addChildControllers() {
+        addChild(boardController)
+        view.addSubview(boardController.view)
+        boardController.view.frame = view.bounds
+        boardController.didMove(toParent: self)
+        boardController.view.isHidden = true
+    }
+    
     @IBAction func didTapMenuButton() {
-        present(sideMenu, animated: true)
+        present(sideMenu!, animated: true)
     }
     
     @IBAction func addShip(_ sender: UIButton) {
@@ -68,40 +81,18 @@ class GameViewController: UIViewController {
     override var prefersStatusBarHidden: Bool {
         return true
     }
-}
-
-class MenuViewController: UITableViewController {
     
-    private let menuItems: [String]
-    
-    init(with menuItems: [String]) {
-        self.menuItems = menuItems
-        super.init(nibName: nil, bundle: nil)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
-    // Table
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return menuItems.count
-    }
-    
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = menuItems[indexPath.row]
-        return cell
-    }
-    
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        // Relay to delegate about menu item selection
-        
+    // Implement function to conform to MenuControllerDelegate protocol
+    func didSelectMenuItem(menuItem: SideMenuItem) {
+        sideMenu?.dismiss(animated: true, completion: nil)
+        title = menuItem.rawValue
+        switch menuItem {
+        case.formation:
+            boardController.view.isHidden = true
+        case.board:
+            boardController.view.isHidden = false
+        case.feedback:
+            boardController.view.isHidden = true
+        }
     }
 }
