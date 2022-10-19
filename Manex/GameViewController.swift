@@ -20,13 +20,6 @@ class GameViewController: UIViewController, MenuControllerDelegate {
     // Perform a one-time instantiation and initialization of the VC's view's contents
     override func viewDidLoad() {
         super.viewDidLoad()
-        let menu = MenuViewController(with: SideMenuItem.allCases)
-        menu.delegate = self
-        sideMenu = SideMenuNavigationController(rootViewController: menu)
-        sideMenu?.leftSide = true
-        SideMenuManager.default.leftMenuNavigationController = sideMenu
-        SideMenuManager.default.addPanGestureToPresent(toView: view)
-        addChildControllers()
         
         if let view = self.view as! SKView? {
             // Load the SKScene from 'GameScene.sks'
@@ -50,18 +43,6 @@ class GameViewController: UIViewController, MenuControllerDelegate {
         }
     }
     
-    private func addChildControllers() {
-        addChild(boardController)
-        view.addSubview(boardController.view)
-        boardController.view.frame = view.bounds
-        boardController.didMove(toParent: self)
-        boardController.view.isHidden = true
-    }
-    
-    @IBAction func didTapMenuButton() {
-        present(sideMenu!, animated: true)
-    }
-    
     @IBAction func addShip(_ sender: UIButton) {
         scene?.addShipToColummn()
     }
@@ -80,19 +61,5 @@ class GameViewController: UIViewController, MenuControllerDelegate {
 
     override var prefersStatusBarHidden: Bool {
         return true
-    }
-    
-    // Implement function to conform to MenuControllerDelegate protocol
-    func didSelectMenuItem(menuItem: SideMenuItem) {
-        sideMenu?.dismiss(animated: true, completion: nil)
-        title = menuItem.rawValue
-        switch menuItem {
-        case.formation:
-            boardController.view.isHidden = true
-        case.board:
-            boardController.view.isHidden = false
-        case.feedback:
-            boardController.view.isHidden = true
-        }
     }
 }
