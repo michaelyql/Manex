@@ -7,12 +7,10 @@
 
 import UIKit
 import SpriteKit
-import SideMenu
 
-class GameViewController: UIViewController, MenuControllerDelegate {
+class GameViewController: UIViewController {
     
-    private var sideMenu: SideMenuNavigationController?
-    private let boardController = BoardViewController()
+    @IBOutlet weak var toggleMenuButton: UIButton!
     @IBOutlet weak var addShipButton: UIButton!
     @IBOutlet weak var removeShipButton: UIButton!
     var scene: GameScene? = nil
@@ -49,6 +47,10 @@ class GameViewController: UIViewController, MenuControllerDelegate {
     
     @IBAction func removeShip(_ sender: UIButton) {
         scene?.removeShipFromColumn()
+    }
+    
+    @IBAction func didTapToggleMenuButton(_ sender: UIButton) {
+        sender.isSelected.toggle()
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
