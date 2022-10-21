@@ -15,11 +15,16 @@ class GameScene: SKScene {
     // Display ship ID number next to ship -- This can be a nested class
     // Add toggle button for showing / hiding ship ID number
     // func addShipToRow() {}
-    // Standard ship formations (column and line abreast) - Recursive function
+    // Standard ship formations (line abreast) - Recursive function
     // Toggle to calculate and display the distance between each ship (SD and MI)
+    // Rotating ship function
+    // Function for calculating destination point for ships
+    // Consider adding animation for ships transiting into new position
+    /* Add time and space calculations as well - how much time is needed to reach the point, what speed and heading to proceed at */
+    // Reset button to return to start position
     
     var previousCameraPoint = CGPoint.zero
-    var lastShip: Ship = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150)
+    var lastShip: Ship = Ship(shipType: .large)
     
     override var isUserInteractionEnabled: Bool {
         get {
@@ -51,17 +56,16 @@ class GameScene: SKScene {
     // Overriding methods to allow the Scene and its nodes to respond to touch events
     /* Update 15/10/2022: Buttons now configured as UIButtons in the view, instead of SKNodes in the SKScene */
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        guard let touch = touches.first else { return }
-        let location = touch.location(in: self)
-        let frontTouchedNode = atPoint(location)
+//        guard let touch = touches.first else { return }
+//        let location = touch.location(in: self)
+//        let frontTouchedNode = atPoint(location)
     }
     
+    /* To be refactored to allow user to pick which type of ship to add first before adding the ship */
     func addShipToColummn() {
-        let newShip = Ship(imageNamed: "warship_large_v2", sd: 150, mi: 150, prev: lastShip)
+        let newShip = Ship(shipType: .large, prev: lastShip)
         lastShip.nextShip = newShip
-
         newShip.position = CGPoint(x: lastShip.position.x, y: lastShip.position.y - CGFloat(lastShip.standardDistance))
-        
         guard newShip.id <= 8 else { return }
         addChild(newShip)
         lastShip = newShip
