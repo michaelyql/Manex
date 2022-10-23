@@ -11,7 +11,7 @@ import GameplayKit
 class GameScene: SKScene {
     
     // To implement:
-    // Static Menu Node fixed to the camera with all the functions
+
     // Display ship ID number next to ship -- This can be a nested class
     // Add toggle button for showing / hiding ship ID number
     // func addShipToRow() {}
@@ -59,32 +59,6 @@ class GameScene: SKScene {
 //        guard let touch = touches.first else { return }
 //        let location = touch.location(in: self)
 //        let frontTouchedNode = atPoint(location)
-    }
-    
-    /* To be refactored to allow user to pick which type of ship to add first before adding the ship */
-    func addShipToColummn() {
-        let newShip = Ship(shipType: .large, prev: lastShip)
-        lastShip.nextShip = newShip
-        newShip.position = CGPoint(x: lastShip.position.x, y: lastShip.position.y - CGFloat(lastShip.standardDistance))
-        guard newShip.id <= 8 else { return }
-        addChild(newShip)
-        lastShip = newShip
-    }
-    
-    func removeShipFromColumn() {
-        guard lastShip.id > 1 else { return }
-        lastShip.removeFromParent()
-        if let previousShip = lastShip.previousShip {
-            previousShip.nextShip = nil
-            lastShip = previousShip
-        }
-    }
-    
-    func formation1() {
-        addShipToColummn()
-        if lastShip.id < 8 {
-            formation1()
-        } else { return }
     }
     
     // Panning gesture
