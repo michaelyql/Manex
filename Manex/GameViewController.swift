@@ -10,9 +10,9 @@ import SpriteKit
 
 class GameViewController: UIViewController {
     
-    @IBOutlet weak var toggleMenuButton: UIButton!
-    @IBOutlet weak var addShipButton: UIButton!
-    @IBOutlet weak var removeShipButton: UIButton!
+    @IBOutlet weak var signalConfigView: UIView!
+    @IBOutlet weak var menuView: UIView!
+    @IBOutlet weak var collectionView: UICollectionView!
     var scene: GameScene? = nil
     
     // Perform a one-time instantiation and initialization of the VC's view's contents
@@ -20,7 +20,7 @@ class GameViewController: UIViewController {
         super.viewDidLoad()
         
         if let view = self.view as! SKView? {
-            // Load the SKScene from 'GameScene.sks'
+            // Load formation scene
             if let scene = GameScene(fileNamed: "GameScene") {
                 self.scene = scene
                 // Set the scale mode to scale to fit the window
@@ -39,18 +39,37 @@ class GameViewController: UIViewController {
             view.showsFPS = true
             view.showsNodeCount = true
         }
+        menuView.isHidden = true
+        signalConfigView.isHidden = true
+        collectionView.register(SignalCollectionViewCell.nib(), forCellWithReuseIdentifier: SignalCollectionViewCell.identifier)
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
     }
     
-    @IBAction func addShip(_ sender: UIButton) {
+    @IBAction func didTapAddShipButton(_ sender: UIButton) {
         scene?.addShipToColummn()
     }
     
-    @IBAction func removeShip(_ sender: UIButton) {
+    @IBAction func didTapRemoveShipButton(_ sender: UIButton) {
         scene?.removeShipFromColumn()
     }
     
+    @IBAction func didTapExecuteSignalButton(_ sender: UIButton) {
+        signalConfigView.isHidden.toggle()
+    }
+    
     @IBAction func didTapToggleMenuButton(_ sender: UIButton) {
-        sender.isSelected.toggle()
+        if menuView.isHidden == true {
+            menuView.alpha = 0
+            menuView.isHidden.toggle()
+            UIView.animate(withDuration: 1.0) { [self] in
+                menuView.alpha = 1.0
+            }
+        }
+        else {
+            menuView.isHidden.toggle()
+        }
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
