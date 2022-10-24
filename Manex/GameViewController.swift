@@ -41,9 +41,16 @@ class GameViewController: UIViewController {
         }
         menuView.isHidden = true
         signalConfigView.isHidden = true
-        collectionView.register(SignalCollectionViewCell.nib(), forCellWithReuseIdentifier: SignalCollectionViewCell.identifier)
-        collectionView.delegate = self
-        collectionView.dataSource = self
+        
+        collectionView.register(SignalCollectionViewCell.self, forCellWithReuseIdentifier: "signalCell")
+        
+        let dataSource = UICollectionViewDiffableDataSource<Int, String>(collectionView: collectionView) {(collectionView, indexPath, itemIdentifier) -> UICollectionViewCell in
+            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "signalCell", for: indexPath) as! SignalCollectionViewCell
+            cell.contentView.addSubview(UIButton(frame: CGRect(x: 0, y: 0, width: 42, height: 42)))
+            return cell
+        }
+        
+        collectionView.dataSource = dataSource
         
     }
     

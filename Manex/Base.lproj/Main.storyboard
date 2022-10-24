@@ -134,7 +134,7 @@
                                                 </segments>
                                             </segmentedControl>
                                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="St4-Gf-SJ0">
-                                                <rect key="frame" x="34" y="39" width="240" height="224"/>
+                                                <rect key="frame" x="34" y="37" width="240" height="240"/>
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="y5E-2k-0U5">
@@ -145,13 +145,13 @@
                                                 </collectionViewFlowLayout>
                                                 <cells>
                                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="signalCell" id="hqm-fj-JkS">
-                                                        <rect key="frame" x="0.0" y="0.0" width="75" height="67"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
                                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                         <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="MkC-2J-M61">
-                                                            <rect key="frame" x="0.0" y="0.0" width="75" height="67"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="42" height="42"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </collectionViewCellContentView>
-                                                        <size key="customSize" width="75" height="67"/>
+                                                        <size key="customSize" width="42" height="42"/>
                                                     </collectionViewCell>
                                                 </cells>
                                             </collectionView>
